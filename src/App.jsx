@@ -3,6 +3,9 @@ import { useState } from "react";
 import data from "./data.json";
 function App() {
   const [notifications, setNotifications] = useState(data);
+  const [counter, setCounter] = useState(
+    notifications.filter((notification) => !notification.isRead).length
+  );
 
   const read = (id) => {
     const updatedNotifications = notifications.map((notification) => {
@@ -12,12 +15,28 @@ function App() {
       return notification;
     });
     setNotifications(updatedNotifications);
+    const clickedNotification = notifications.find(
+      (notification) => notification.id === id
+    );
+    if (!clickedNotification.isRead) {
+      setCounter(counter - 1);
+    }
   };
+  const markAllAsRead = () => {
+    const updatedNotifications = notifications.map((notification) => {
+      return { ...notification, isRead: true };
+    });
+    setNotifications(updatedNotifications);
+    setCounter(0);
+  };
+
   return (
     <>
       <section>
-        <h2>nitifications 3</h2>
-        <p>Mark all as read</p>
+        <h2>notifications {counter}</h2>
+        <p onClick={markAllAsRead} style={{ cursor: "pointer" }}>
+          Mark all as read
+        </p>
       </section>
 
       <main>
